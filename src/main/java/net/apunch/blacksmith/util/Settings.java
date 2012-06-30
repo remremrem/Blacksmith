@@ -36,6 +36,7 @@ public class Settings {
 
     public enum Setting {
         BASE_PRICE("base-prices.default", 10),
+        PRICE_PER_DURABILITY_POINT("base-prices.price-per-durability-point", 1)
         BUSY_WITH_PLAYER_MESSAGE("defaults.messages.busy-with-player", "<c>I'm busy at the moment. Come back later!"),
         BUSY_WITH_REFORGE_MESSAGE("defaults.messages.busy-with-reforge", "<c>I'm working on it. Be patient!"),
         COOLDOWN_UNEXPIRED_MESSAGE(
