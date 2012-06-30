@@ -20,6 +20,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class BlacksmithPlugin extends JavaPlugin {
     private Settings config;
     private Economy economy;
+    private APIBridge hyperAPI;
+    private boolean useHyperAPI = false;
 
     @Override
     public void onDisable() {
@@ -32,6 +34,16 @@ public class BlacksmithPlugin extends JavaPlugin {
     public void onEnable() {
         config = new Settings(this);
         config.load();
+    
+        // Setup Hyperconomy (Soft-Depend only, so this is completely optional!)    
+        // Hyperconomy uses your favorite Vault-compatible economy system
+        // and calculates prices for items based on supply and demand on the fly.
+        // This is only used to get the cost of a repair.
+        if (Bukkit.getPluginManager().getPlugin("HyperConomy") != null) {
+            getServer().getLogger().log(Level.INFO, "Found HyperConomy! Using that for calculating prices, base-prices and price-per-durability-point in the Blacksmith config.yml will NOT be used!");
+            this.useHyperAPI = true;
+            this.hyperAPI = new APIBridge();
+        }
 
         // Setup Vault
         RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(
@@ -135,7 +147,16 @@ public class BlacksmithPlugin extends JavaPlugin {
             price = root.getDouble("base-prices." + item.getType().name().toLowerCase().replace('_', '-'));
 
         // Adjust price based on durability and enchantments
-        price += (item.getDurability() * Setting.PRICE_PER_DURABILITY_POINT.asDouble());
+        if (this.useHyperAPI) {
+            // If using hyperconomy, price is calculated like so:
+            // New Item Price (from hyperconomy) / maxDurability = price per durability point
+            // Total price would then be base_price + price per durablity point * current durability
+            double hyperPrice = this.hyperAPI.getItemPurchasePrice(item.getTypeId(), 0, item.getAmount());
+            double hyperPricePerDurability = hyperPrice / item.getType().getMaxDurability();
+            price += (item.getDurability() * hyperPricePerDurability);
+        }
+        
+        else price += (item.getDurability() * Setting.PRICE_PER_DURABILITY_POINT.asDouble());
         
         double enchantmentModifier = Setting.ENCHANTMENT_MODIFIER.asDouble();
         for (Enchantment enchantment : item.getEnchantments().keySet()) {
