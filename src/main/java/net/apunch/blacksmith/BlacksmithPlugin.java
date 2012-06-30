@@ -135,8 +135,8 @@ public class BlacksmithPlugin extends JavaPlugin {
             price = root.getDouble("base-prices." + item.getType().name().toLowerCase().replace('_', '-'));
 
         // Adjust price based on durability and enchantments
-        price += (item.getType().getMaxDurability() - item.getDurability());
-
+        price += (item.getDurability() * Setting.PRICE_PER_DURABILITY_POINT.asDouble());
+        
         double enchantmentModifier = Setting.ENCHANTMENT_MODIFIER.asDouble();
         for (Enchantment enchantment : item.getEnchantments().keySet()) {
             if (root.keyExists("enchantment-modifiers." + enchantment.getName().toLowerCase().replace('_', '-')))
