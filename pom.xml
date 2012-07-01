@@ -55,6 +55,12 @@
 			<version>${vault.version}</version>
 			<scope>provided</scope>
 		</dependency>
+		<dependency>
+			<groupId>regalowl.hyperconomy</groupId>
+			<artifactId>hyperconomy</artifactId>
+			<version>${hyperconomy.version}</version>
+			<scope>provided</scope>
+		</dependency>
 	</dependencies>
 
 	<!-- Build information -->
