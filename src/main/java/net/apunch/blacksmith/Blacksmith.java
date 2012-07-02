@@ -158,6 +158,7 @@ public class Blacksmith extends Character {
 		key.setInt("delays-in-seconds.maximum", maxReforgeDelay);
 		key.setInt("delays-in-seconds.reforge-cooldown", reforgeCooldown);
 		key.setInt("percent-chance-to-fail-reforge", failChance);
+		key.setInt("percent-chance-for-extra-enchantment", extraEnchantmentChance);
 		key.setInt("maximum-enchantments", maxEnchantments);
 		key.setBoolean("drop-item", dropItem);
 	}
