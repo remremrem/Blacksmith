@@ -56,6 +56,7 @@ public class Settings {
         ITEM_UNEXPECTEDLY_CHANGED_MESSAGE(
                 "defaults.messages.item-changed-during-reforge",
                 "<c>That's not the item you wanted to reforge before!"),
+        EXTRA_ENCHANTMENT_CHANCE("defaults.percent-chance-for-extra-enchantment", 5),
         MAX_ENCHANTMENTS("defaults.maximum-enchantments", 3),
         MAX_REFORGE_DELAY("defaults.delays-in-seconds.maximum", 30),
         MIN_REFORGE_DELAY("defaults.delays-in-seconds.minimum", 5),
