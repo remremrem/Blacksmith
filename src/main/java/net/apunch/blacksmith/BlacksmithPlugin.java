@@ -4,8 +4,6 @@ import java.util.logging.Level;
 
 import net.apunch.blacksmith.util.Settings;
 import net.apunch.blacksmith.util.Settings.Setting;
-import net.aufdemrand.sentry.SentryInstance;
-import net.aufdemrand.sentry.SentryTrait;
 
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
