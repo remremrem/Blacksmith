@@ -4,8 +4,11 @@ import java.util.logging.Level;
 
 import net.apunch.blacksmith.util.Settings;
 import net.apunch.blacksmith.util.Settings.Setting;
+import net.aufdemrand.sentry.SentryInstance;
+import net.aufdemrand.sentry.SentryTrait;
 
 import net.citizensnpcs.api.CitizensAPI;
+import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.util.DataKey;
 
 import net.milkbowl.vault.economy.Economy;
@@ -66,6 +69,18 @@ public class BlacksmithPlugin extends JavaPlugin {
         getLogger().log(Level.INFO, " v" + getDescription().getVersion() + " enabled.");
     }
 
+	public BlacksmithTrait getBlacksmith(NPC npc){
+
+		if (npc !=null && npc.hasTrait(BlacksmithTrait.class)){
+			return npc.getTrait(BlacksmithTrait.class);
+		}
+
+		return null;
+	}
+    
+    
+    
+    
     public boolean isTool(ItemStack item) {
         switch (item.getType()) {
         case WOOD_PICKAXE:
