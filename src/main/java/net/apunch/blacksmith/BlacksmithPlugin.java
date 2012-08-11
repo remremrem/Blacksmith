@@ -6,7 +6,6 @@ import net.apunch.blacksmith.util.Settings;
 import net.apunch.blacksmith.util.Settings.Setting;
 
 import net.citizensnpcs.api.CitizensAPI;
-import net.citizensnpcs.api.npc.character.CharacterFactory;
 import net.citizensnpcs.api.util.DataKey;
 
 import net.milkbowl.vault.economy.Economy;
@@ -61,8 +60,8 @@ public class BlacksmithPlugin extends JavaPlugin {
             return;
         }
 
-        CitizensAPI.getCharacterManager().registerCharacter(
-                new CharacterFactory(Blacksmith.class).withName("blacksmith"));
+        CitizensAPI.getTraitFactory().registerTrait(net.citizensnpcs.api.trait.TraitInfo.create(BlacksmithTrait.class).withName("blacksmith"));
+        
 
         getLogger().log(Level.INFO, " v" + getDescription().getVersion() + " enabled.");
     }
