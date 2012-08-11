@@ -100,7 +100,8 @@ public class BlacksmithTrait extends Trait {
 
 	@EventHandler
 	public void onRightClick(net.citizensnpcs.api.event.NPCRightClickEvent event) {
-		if (!event.getNPC().hasTrait(BlacksmithTrait.class)) return;
+		if(this.npc!=event.getNPC()) return;
+		
 		Player player = event.getClicker();
 		if (!player.hasPermission("blacksmith.reforge"))
 			return;
