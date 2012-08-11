@@ -11,15 +11,16 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
 import org.bukkit.inventory.ItemStack;
 
 import net.apunch.blacksmith.util.Settings.Setting;
 
 import net.citizensnpcs.api.npc.NPC;
-import net.citizensnpcs.api.npc.character.Character;
+import net.citizensnpcs.api.trait.Trait;
 import net.citizensnpcs.api.util.DataKey;
 
-public class Blacksmith extends Character {
+public class BlacksmithTrait extends Trait {
 	private static final int[] enchantments = new int[Enchantment.values().length];
 
 	private final BlacksmithPlugin plugin;
@@ -46,7 +47,8 @@ public class Blacksmith extends Character {
 	private int maxEnchantments = Setting.MAX_ENCHANTMENTS.asInt();
 	private boolean dropItem = Setting.DROP_ITEM.asBoolean();
 
-	public Blacksmith() {
+	public BlacksmithTrait() {
+		super("blacksmith");
 		plugin = (BlacksmithPlugin) Bukkit.getServer().getPluginManager().getPlugin("Blacksmith");
 		int i = 0;
 		for (Enchantment enchantment : Enchantment.values())
@@ -96,14 +98,15 @@ public class Blacksmith extends Character {
 			dropItem = key.getBoolean("drop-item");
 	}
 
-	@Override
-	public void onRightClick(NPC npc, Player player) {
+	@EventHandler
+	public void onRightClick(net.citizensnpcs.api.event.NPCRightClickEvent event) {
+		Player player = event.getClicker();
 		if (!player.hasPermission("blacksmith.reforge"))
 			return;
 
 		if (cooldowns.get(player.getName()) != null) {
 			if (!Calendar.getInstance().after(cooldowns.get(player.getName()))) {
-				npc.chat(player, cooldownUnexpiredMsg);
+				player.sendMessage(cooldownUnexpiredMsg);
 				return;
 			}
 			cooldowns.remove(player.getName());
@@ -112,12 +115,12 @@ public class Blacksmith extends Character {
 		ItemStack hand = player.getItemInHand();
 		if (session != null) {
 			if (!session.isInSession(player)) {
-				npc.chat(player, busyWithPlayerMsg);
+				player.sendMessage( busyWithPlayerMsg);
 				return;
 			}
 
 			if (session.isRunning()) {
-				npc.chat(player, busyReforgingMsg);
+				player.sendMessage( busyReforgingMsg);
 				return;
 			}
 			if (session.handleClick())
@@ -127,14 +130,13 @@ public class Blacksmith extends Character {
 		} else {
 			if ((!plugin.isTool(hand) && !plugin.isArmor(hand))
 					|| (!reforgeableItems.isEmpty() && !reforgeableItems.contains(hand.getType()))) {
-				npc.chat(player, invalidItemMsg);
+				player.sendMessage( invalidItemMsg);
 				return;
 			}
 			session = new ReforgeSession(player, npc);
-			npc.chat(
-					player,
-					costMsg.replace("<price>", plugin.formatCost(player)).replace("<item>",
-							hand.getType().name().toLowerCase().replace('_', ' ')));
+			player.sendMessage(costMsg.replace("<price>", plugin.formatCost(player)).replace("<item>",
+					hand.getType().name().toLowerCase().replace('_', ' ')));
+
 		}
 	}
 
@@ -164,7 +166,7 @@ public class Blacksmith extends Character {
 	}
 
 	private void reforge(NPC npc, Player player) {
-		npc.chat(player, startReforgeMsg);
+		player.sendMessage( startReforgeMsg);
 		plugin.withdraw(player);
 		session.beginReforge();
 		if (npc.getBukkitEntity() instanceof Player)
@@ -186,7 +188,7 @@ public class Blacksmith extends Character {
 
 		@Override
 		public void run() {
-			npc.chat(player, reforgeItemInHand() ? successMsg : failMsg);
+			player.sendMessage( reforgeItemInHand() ? successMsg : failMsg);
 			if (npc.getBukkitEntity() instanceof Player)
 				((Player) npc.getBukkitEntity()).setItemInHand(null);
 			if (dropItem)
@@ -233,7 +235,7 @@ public class Blacksmith extends Character {
 			/*if (reforge.getDurability() == 0)
             	chance *= 4;
             else */
-			
+
 			reforge.setDurability((short) 0);
 			for (int i = 0; i < chance; i++) {
 				if (reforge.getEnchantments().keySet().size() == maxEnchantments)
@@ -249,11 +251,11 @@ public class Blacksmith extends Character {
 		private boolean handleClick() {
 			// Prevent player from switching items during session
 			if (!reforge.equals(player.getItemInHand())) {
-				npc.chat(player, itemChangedMsg);
+				player.sendMessage( itemChangedMsg);
 				return true;
 			}
 			if (!plugin.doesPlayerHaveEnough(player)) {
-				npc.chat(player, insufficientFundsMsg);
+				player.sendMessage( insufficientFundsMsg);
 				return true;
 			}
 			return false;
