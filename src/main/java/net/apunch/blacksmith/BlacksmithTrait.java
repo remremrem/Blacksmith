@@ -114,11 +114,23 @@ public class BlacksmithTrait extends Trait {
 			cooldowns.remove(player.getName());
 		}
 
+
 		ItemStack hand = player.getItemInHand();
+
+		if(session!=null){
+			//timeout
+			if ( System.currentTimeMillis() > _sessionstart + 10*1000 || this.npc.getBukkitEntity().getLocation().distance(session.player.getLocation()) > 20 ){
+				session = null;
+			}	
+		}
+
+
 		if (session != null) {
 			if (!session.isInSession(player)) {
+
 				player.sendMessage( busyWithPlayerMsg);
-				return;
+				return;		
+
 			}
 
 			if (session.isRunning()) {
@@ -135,12 +147,15 @@ public class BlacksmithTrait extends Trait {
 				player.sendMessage( invalidItemMsg);
 				return;
 			}
+			_sessionstart = System.currentTimeMillis();
 			session = new ReforgeSession(player, npc);
 			player.sendMessage(costMsg.replace("<price>", plugin.formatCost(player)).replace("<item>",
 					hand.getType().name().toLowerCase().replace('_', ' ')));
 
 		}
 	}
+
+	private long _sessionstart = System.currentTimeMillis();
 
 	@Override
 	public void save(DataKey key) {
@@ -234,13 +249,13 @@ public class BlacksmithTrait extends Trait {
 			reforge.setDurability((short) 0);
 
 			// Add random enchantments
-	
+
 
 			// If durability is full, chance is multiplied by 4. Seems unbalanced, so disabled for now.
 			/*if (reforge.getDurability() == 0)
             	chance *= 4;
             else */
-			
+
 			int roll = random.nextInt(100);
 			if (roll < extraEnchantmentChance && reforge.getEnchantments().keySet().size() < maxEnchantments){
 
