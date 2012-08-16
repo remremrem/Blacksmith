@@ -101,7 +101,7 @@ public class BlacksmithTrait extends Trait {
 	@EventHandler
 	public void onRightClick(net.citizensnpcs.api.event.NPCRightClickEvent event) {
 		if(this.npc!=event.getNPC()) return;
-		
+
 		Player player = event.getClicker();
 		if (!player.hasPermission("blacksmith.reforge"))
 			return;
@@ -230,22 +230,25 @@ public class BlacksmithTrait extends Trait {
 				reforge.setDurability(durability);
 				return false;
 			}
+
+			reforge.setDurability((short) 0);
+
 			// Add random enchantments
-			int chance = extraEnchantmentChance;
+	
 
 			// If durability is full, chance is multiplied by 4. Seems unbalanced, so disabled for now.
 			/*if (reforge.getDurability() == 0)
             	chance *= 4;
             else */
+			
+			int roll = random.nextInt(100);
+			if (roll < extraEnchantmentChance && reforge.getEnchantments().keySet().size() < maxEnchantments){
 
-			reforge.setDurability((short) 0);
-			for (int i = 0; i < chance; i++) {
-				if (reforge.getEnchantments().keySet().size() == maxEnchantments)
-					break;
 				Enchantment enchantment = Enchantment.getById(enchantments[random.nextInt(enchantments.length)]);
-				if (enchantment.canEnchantItem(reforge))
-					reforge.addEnchantment(enchantment, random.nextInt(enchantment.getMaxLevel()) + 1);
+				if (enchantment.canEnchantItem(reforge))reforge.addEnchantment(enchantment, random.nextInt(enchantment.getMaxLevel()) + 1);
+
 			}
+
 			return true;
 		}
 
