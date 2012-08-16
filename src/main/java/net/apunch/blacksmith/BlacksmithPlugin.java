@@ -172,7 +172,7 @@ public class BlacksmithPlugin extends JavaPlugin {
 
 		else {
 			if (root.keyExists("price-per-durability-point." + item.getType().name().toLowerCase().replace('_', '-')))
-				price += root.getDouble("price-per-durability-point." + item.getType().name().toLowerCase().replace('_', '-'));
+				price += item.getDurability() * root.getDouble("price-per-durability-point." + item.getType().name().toLowerCase().replace('_', '-'));
 			else price += (item.getDurability() * Setting.PRICE_PER_DURABILITY_POINT.asDouble());
 		}
 
