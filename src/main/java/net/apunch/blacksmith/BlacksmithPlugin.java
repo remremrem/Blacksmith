@@ -29,7 +29,7 @@ public class BlacksmithPlugin extends JavaPlugin {
 
 	@Override
 	public void onDisable() {
-		config.save();
+	//	config.save();
 
 		getLogger().log(Level.INFO, " v" + getDescription().getVersion() + " disabled.");
 	}
