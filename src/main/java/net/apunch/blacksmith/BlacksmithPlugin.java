@@ -1,6 +1,7 @@
 package net.apunch.blacksmith;
 
 import java.util.logging.Level;
+import me.tehbeard.cititrader.WalletTrait;
 
 import net.apunch.blacksmith.util.Settings;
 import net.apunch.blacksmith.util.Settings.Setting;
@@ -26,6 +27,7 @@ public class BlacksmithPlugin extends JavaPlugin {
 	private Economy economy;
 	private APIBridge hyperAPI;
 	private boolean useHyperAPI = false;
+        private boolean hasCititrader = false;
 
 	@Override
 	public void onDisable() {
@@ -49,6 +51,11 @@ public class BlacksmithPlugin extends JavaPlugin {
 			this.hyperAPI = new APIBridge();
 		}
 
+                // Check for Cititrader
+                if(getServer().getPluginManager().getPlugin("CitiTrader") != null) {
+                    hasCititrader = true;
+                }
+                
 		// Setup Vault
 		RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(
 				Economy.class);
@@ -67,6 +74,11 @@ public class BlacksmithPlugin extends JavaPlugin {
 		getLogger().log(Level.INFO, " v" + getDescription().getVersion() + " enabled.");
 	}
 
+        // Return if we have cititrader
+        public boolean hasCititrader() {
+            return this.hasCititrader;
+        }
+        
 	public BlacksmithTrait getBlacksmith(NPC npc){
 
 		if (npc !=null && npc.hasTrait(BlacksmithTrait.class)){
@@ -153,6 +165,15 @@ public class BlacksmithPlugin extends JavaPlugin {
 	public void withdraw(Player player) {
 		economy.withdrawPlayer(player.getName(), getCost(player.getItemInHand()));
 	}
+        
+        public void deposit(NPC npc, Player player) {
+            if(hasCititrader) {
+                if(npc.hasTrait(WalletTrait.class)) {
+                    npc.getTrait(WalletTrait.class).deposit(getCost(player.getItemInHand()));
+                }
+                    
+            }
+        }
 
 	private double getCost(ItemStack item) {
 		DataKey root = config.getConfig().getKey("");
