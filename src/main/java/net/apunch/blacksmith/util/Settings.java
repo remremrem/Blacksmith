@@ -23,11 +23,7 @@ public class Settings {
             else
                 setting.set(root.getRaw(setting.path));
 
-        save();
-    }
-
-    public void save() {
-        config.save();
+        //save();
     }
 
     public YamlStorage getConfig() {
