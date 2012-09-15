@@ -62,6 +62,11 @@
 			<scope>system</scope>
 			<systemPath>${basedir}/lib/HyperConomy.jar</systemPath>
 		</dependency>
+	 <dependency>
+	  <groupId>me.tehbeard</groupId>
+	  <artifactId>CitiTrader</artifactId>
+	  <version>RC-5</version>
+	 </dependency>
 	</dependencies>
 
 	<!-- Build information -->

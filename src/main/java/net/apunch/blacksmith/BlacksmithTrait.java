@@ -184,7 +184,10 @@ public class BlacksmithTrait extends Trait {
 
 	private void reforge(NPC npc, Player player) {
 		player.sendMessage( startReforgeMsg);
-		plugin.withdraw(player);
+                
+                plugin.deposit(npc, player);
+                
+                plugin.withdraw(player);
 		session.beginReforge();
 		if (npc.getBukkitEntity() instanceof Player)
 			((Player) npc.getBukkitEntity()).setItemInHand(player.getItemInHand());
