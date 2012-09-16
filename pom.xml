@@ -33,6 +33,10 @@
 			<id>vault-repo</id>
 			<url>http://ci.herocraftonline.com/plugin/repository/everything/</url>
 		</repository>
+                <repository>
+                    <id>thedemgel-repo</id>
+                    <url>http://thedemgel.com:9090/plugin/repository/everything/</url>
+                </repository>
 	</repositories>
 
 	<!-- Dependencies -->
