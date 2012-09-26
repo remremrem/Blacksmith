@@ -1,7 +1,7 @@
 package net.apunch.blacksmith;
 
 import java.util.logging.Level;
-// import me.tehbeard.cititrader.WalletTrait;
+import me.tehbeard.cititrader.WalletTrait;
 
 import net.apunch.blacksmith.util.Settings;
 import net.apunch.blacksmith.util.Settings.Setting;
@@ -52,9 +52,9 @@ public class BlacksmithPlugin extends JavaPlugin {
 		}
 
                 // Check for Cititrader
-                // if(getServer().getPluginManager().getPlugin("CitiTrader") != null) {
-                //     hasCititrader = true;
-                // }
+                 if(getServer().getPluginManager().getPlugin("CitiTrader") != null) {
+                     hasCititrader = true;
+                 }
                 
 		// Setup Vault
 		RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(
@@ -75,9 +75,9 @@ public class BlacksmithPlugin extends JavaPlugin {
 	}
 
         // Return if we have cititrader
-        // public boolean hasCititrader() {
-        //    return this.hasCititrader;
-        // }
+         public boolean hasCititrader() {
+            return this.hasCititrader;
+         }
         
 	public BlacksmithTrait getBlacksmith(NPC npc){
 
@@ -167,11 +167,11 @@ public class BlacksmithPlugin extends JavaPlugin {
 	}
         
         public void deposit(NPC npc, Player player) {
-        //    if(hasCititrader) {
-        //        if(npc.hasTrait(WalletTrait.class)) {
-        //            npc.getTrait(WalletTrait.class).deposit(getCost(player.getItemInHand()));
-        //        }
-        //    }
+            if(hasCititrader) {
+                if(npc.hasTrait(WalletTrait.class)) {
+                    npc.getTrait(WalletTrait.class).deposit(getCost(player.getItemInHand()));
+                }
+            }
         }
 
 	private double getCost(ItemStack item) {
@@ -183,7 +183,7 @@ public class BlacksmithPlugin extends JavaPlugin {
 		// Adjust price based on durability and enchantments
 		if (this.useHyperAPI) {
 			// If using hyperconomy, price is calculated like so:
-				// New Item Price (from hyperconomy) / maxDurability = price per durability point
+			// New Item Price (from hyperconomy) / maxDurability = price per durability point
 			// Total price would then be base_price + price per durablity point * current durability
 			double hyperPrice = this.hyperAPI.getItemPurchasePrice(item.getTypeId(), 0, item.getAmount());
 			double hyperPricePerDurability = hyperPrice / item.getType().getMaxDurability();
