@@ -13,6 +13,10 @@ import net.citizensnpcs.api.util.DataKey;
 import net.milkbowl.vault.economy.Economy;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
+import org.bukkit.command.PluginCommand;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -74,7 +78,14 @@ public class BlacksmithPlugin extends JavaPlugin {
 		getLogger().log(Level.INFO, " v" + getDescription().getVersion() + " enabled.");
 	}
 
-        // Return if we have cititrader
+    @Override
+    public boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args) {
+        config.load();
+        sender.sendMessage(ChatColor.GREEN + "Blacksmith config reloaded!");
+        return true;
+    }
+
+    // Return if we have cititrader
          public boolean hasCititrader() {
             return this.hasCititrader;
          }
