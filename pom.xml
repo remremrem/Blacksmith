@@ -33,12 +33,6 @@
             <id>vault-repo</id>
             <url>http://ci.herocraftonline.com/plugin/repository/everything/</url>
         </repository>
-        <!-- REPO IS DOWN
-        <repository>
-            <id>thedemgel-repo</id>
-            <url>http://thedemgel.com:8080/jenkins/plugin/repository/everything/</url>
-        </repository>
-        -->
     </repositories>
 
     <!-- Dependencies -->
@@ -67,18 +61,6 @@
             <version>0.933</version>
             <scope>system</scope>
             <systemPath>${basedir}/lib/HyperConomy.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>me.tehbeard</groupId>
-            <artifactId>CitiTrader</artifactId>
-            <version>RC-5</version>
-            <scope>provided</scope>
-            <exclusions>
-                <exclusion>
-                    <artifactId>Towny</artifactId>
-                    <groupId>com.palmergames</groupId>
-                </exclusion>
-            </exclusions>
         </dependency>
     </dependencies>
 

@@ -185,7 +185,7 @@ public class BlacksmithTrait extends Trait {
 	private void reforge(NPC npc, Player player) {
 		player.sendMessage( startReforgeMsg);
                 
-                plugin.deposit(npc, player);
+                //plugin.deposit(npc, player); // CitiTrader dependency outdated and broken
                 
                 plugin.withdraw(player);
 		session.beginReforge();
