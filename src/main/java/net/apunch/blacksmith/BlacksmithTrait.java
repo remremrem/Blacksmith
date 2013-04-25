@@ -267,7 +267,7 @@ public class BlacksmithTrait extends Trait {
 			if (roll < extraEnchantmentChance && reforge.getEnchantments().keySet().size() < maxEnchantments){
 
 				Enchantment enchantment = Enchantment.getById(enchantments[random.nextInt(enchantments.length)]);
-				if (enchantment.canEnchantItem(reforge))reforge.addEnchantment(enchantment, random.nextInt(enchantment.getStartLevel()+enchantment.getMaxLevel())- enchantment.getStartLevel());
+				if (enchantment.canEnchantItem(reforge)) reforge.addEnchantment(enchantment, random.nextInt(enchantment.getMaxLevel() - enchantment.getStartLevel()) + enchantment.getStartLevel());
 
 			}
 
