@@ -13,9 +13,9 @@
     <!-- Properties -->
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <bukkit.version>1.5.1-R0.1</bukkit.version>
+        <bukkit.version>1.5.1-R0.2</bukkit.version>
         <citizensapi.version>2.0.8-SNAPSHOT</citizensapi.version>
-        <vault.version>1.2.18-SNAPSHOT</vault.version>
+        <vault.version>1.2.25-SNAPSHOT</vault.version>
         <build.number>Unknown</build.number>
     </properties>
 
@@ -33,10 +33,12 @@
             <id>vault-repo</id>
             <url>http://ci.herocraftonline.com/plugin/repository/everything/</url>
         </repository>
+        <!-- REPO IS DOWN
         <repository>
             <id>thedemgel-repo</id>
             <url>http://thedemgel.com:8080/jenkins/plugin/repository/everything/</url>
         </repository>
+        -->
     </repositories>
 
     <!-- Dependencies -->
@@ -49,7 +51,7 @@
         </dependency>
         <dependency>
             <groupId>net.citizensnpcs</groupId>
-            <artifactId>citizensapi</artifactId>
+            <artifactId>citizens</artifactId>
             <version>${citizensapi.version}</version>
             <scope>provided</scope>
         </dependency>
