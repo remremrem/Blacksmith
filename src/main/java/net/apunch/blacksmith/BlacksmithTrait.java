@@ -191,6 +191,8 @@ public class BlacksmithTrait extends Trait {
 		session.beginReforge();
 		if (npc.getBukkitEntity() instanceof Player)
 			((Player) npc.getBukkitEntity()).setItemInHand(player.getItemInHand());
+        else
+            npc.getBukkitEntity().getEquipment().setItemInHand(player.getItemInHand());
 		player.setItemInHand(null);
 	}
 
@@ -211,6 +213,8 @@ public class BlacksmithTrait extends Trait {
 			player.sendMessage( reforgeItemInHand() ? successMsg : failMsg);
 			if (npc.getBukkitEntity() instanceof Player)
 				((Player) npc.getBukkitEntity()).setItemInHand(null);
+            else
+                npc.getBukkitEntity().getEquipment().setItemInHand(null);
 			if (dropItem)
 				player.getWorld().dropItemNaturally(npc.getBukkitEntity().getLocation(), reforge);
 			else {
