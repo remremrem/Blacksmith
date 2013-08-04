@@ -296,7 +296,7 @@ public class BlacksmithTrait extends Trait {
 			taskId = plugin
 					.getServer()
 					.getScheduler()
-					.scheduleAsyncDelayedTask(plugin, this,
+					.scheduleSyncDelayedTask(plugin, this,
 							(new Random().nextInt(maxReforgeDelay) + minReforgeDelay) * 20);
 		}
 	}

@@ -1,7 +1,6 @@
 package net.apunch.blacksmith;
 
 import java.util.logging.Level;
-import me.tehbeard.cititrader.WalletTrait;
 
 import net.apunch.blacksmith.util.Settings;
 import net.apunch.blacksmith.util.Settings.Setting;
@@ -167,11 +166,11 @@ public class BlacksmithPlugin extends JavaPlugin {
 	}
         
         public void deposit(NPC npc, Player player) {
-            if(hasCititrader) {
-                if(npc.hasTrait(WalletTrait.class)) {
-                    npc.getTrait(WalletTrait.class).deposit(getCost(player.getItemInHand()));
-                }
-            }
+//            if(hasCititrader) {
+//             if(npc.hasTrait(WalletTrait.class)) {
+//                  npc.getTrait(WalletTrait.class).deposit(getCost(player.getItemInHand()));
+//              }
+//            }
         }
 
 	private double getCost(ItemStack item) {
