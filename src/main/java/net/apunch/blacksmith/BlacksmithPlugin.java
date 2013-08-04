@@ -12,6 +12,10 @@ import net.citizensnpcs.api.util.DataKey;
 import net.milkbowl.vault.economy.Economy;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
+import org.bukkit.command.PluginCommand;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -26,7 +30,7 @@ public class BlacksmithPlugin extends JavaPlugin {
 	private Economy economy;
 	private APIBridge hyperAPI;
 	private boolean useHyperAPI = false;
-        private boolean hasCititrader = false;
+        //private boolean hasCititrader = false; // CitiTrader dependency outdated and broken
 
 	@Override
 	public void onDisable() {
@@ -50,10 +54,12 @@ public class BlacksmithPlugin extends JavaPlugin {
 			this.hyperAPI = new APIBridge();
 		}
 
+        /* CitiTrader dependency outdated and broken
                 // Check for Cititrader
                  if(getServer().getPluginManager().getPlugin("CitiTrader") != null) {
                      hasCititrader = true;
                  }
+                 */
                 
 		// Setup Vault
 		RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(
@@ -73,10 +79,19 @@ public class BlacksmithPlugin extends JavaPlugin {
 		getLogger().log(Level.INFO, " v" + getDescription().getVersion() + " enabled.");
 	}
 
-        // Return if we have cititrader
+    @Override
+    public boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args) {
+        config.load();
+        sender.sendMessage(ChatColor.GREEN + "Blacksmith config reloaded!");
+        return true;
+    }
+
+    /* CitiTrader dependency outdated and broken
+    // Return if we have cititrader
          public boolean hasCititrader() {
             return this.hasCititrader;
          }
+         */
         
 	public BlacksmithTrait getBlacksmith(NPC npc){
 
@@ -164,7 +179,7 @@ public class BlacksmithPlugin extends JavaPlugin {
 	public void withdraw(Player player) {
 		economy.withdrawPlayer(player.getName(), getCost(player.getItemInHand()));
 	}
-        
+       /* CitiTrader dependency outdated and broken.
         public void deposit(NPC npc, Player player) {
 //            if(hasCititrader) {
 //             if(npc.hasTrait(WalletTrait.class)) {
@@ -172,6 +187,7 @@ public class BlacksmithPlugin extends JavaPlugin {
 //              }
 //            }
         }
+        */
 
 	private double getCost(ItemStack item) {
 		DataKey root = config.getConfig().getKey("");
