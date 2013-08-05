@@ -181,11 +181,11 @@ public class BlacksmithPlugin extends JavaPlugin {
 	}
        /* CitiTrader dependency outdated and broken.
         public void deposit(NPC npc, Player player) {
-            if(hasCititrader) {
-                if(npc.hasTrait(WalletTrait.class)) {
-                    npc.getTrait(WalletTrait.class).deposit(getCost(player.getItemInHand()));
-                }
-            }
+//            if(hasCititrader) {
+//             if(npc.hasTrait(WalletTrait.class)) {
+//                  npc.getTrait(WalletTrait.class).deposit(getCost(player.getItemInHand()));
+//              }
+//            }
         }
         */
 
