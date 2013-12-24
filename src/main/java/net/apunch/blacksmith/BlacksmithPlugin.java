@@ -22,13 +22,13 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import regalowl.hyperconomy.APIBridge;
+import regalowl.hyperconomy.HyperObjectAPI;
 
 
 public class BlacksmithPlugin extends JavaPlugin {
 	private Settings config;
 	private Economy economy;
-	private APIBridge hyperAPI;
+	private HyperObjectAPI hyperObAPI;
 	private boolean useHyperAPI = false;
         //private boolean hasCititrader = false; // CitiTrader dependency outdated and broken
 
@@ -51,7 +51,7 @@ public class BlacksmithPlugin extends JavaPlugin {
 		if (Bukkit.getPluginManager().getPlugin("HyperConomy") != null) {
 			getServer().getLogger().log(Level.INFO, "Found HyperConomy! Using that for calculating prices, base-prices and price-per-durability-point in the Blacksmith config.yml will NOT be used!");
 			this.useHyperAPI = true;
-			this.hyperAPI = new APIBridge();
+			this.hyperObAPI = new HyperObjectAPI();
 		}
 
         /* CitiTrader dependency outdated and broken
@@ -200,7 +200,7 @@ public class BlacksmithPlugin extends JavaPlugin {
 			// If using hyperconomy, price is calculated like so:
 			// New Item Price (from hyperconomy) / maxDurability = price per durability point
 			// Total price would then be base_price + price per durablity point * current durability
-			double hyperPrice = this.hyperAPI.getItemPurchasePrice(item.getTypeId(), 0, item.getAmount());
+			double hyperPrice = this.hyperObAPI.getTruePurchasePrice(this.hyperObAPI.getHyperObject(item, "default"), this.hyperObAPI.getEnchantmentClass(item),1);
 			double hyperPricePerDurability = hyperPrice / item.getType().getMaxDurability();
 			price += (item.getDurability() * hyperPricePerDurability);
 		}
