@@ -1,5 +1,6 @@
 package net.apunch.blacksmith;
 
+import java.util.ArrayList;
 import java.util.logging.Level;
 
 import net.apunch.blacksmith.util.Settings;
@@ -13,22 +14,29 @@ import net.milkbowl.vault.economy.Economy;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import regalowl.hyperconomy.HyperObjectAPI;
+import regalowl.hyperconomy.HyperAPI;
+import regalowl.hyperconomy.HyperConomy;
+import regalowl.hyperconomy.bukkit.BukkitConnector;
+import regalowl.hyperconomy.inventory.HItemStack;
+import regalowl.hyperconomy.tradeobject.TradeObject;
 
 
 public class BlacksmithPlugin extends JavaPlugin {
 	private Settings config;
 	private Economy economy;
-	private HyperObjectAPI hyperObAPI;
+	private HyperAPI hyperAPI;
+	private BukkitConnector bukCon;
 	private boolean useHyperAPI = false;
         //private boolean hasCititrader = false; // CitiTrader dependency outdated and broken
 
@@ -51,7 +59,10 @@ public class BlacksmithPlugin extends JavaPlugin {
 		if (Bukkit.getPluginManager().getPlugin("HyperConomy") != null) {
 			getServer().getLogger().log(Level.INFO, "Found HyperConomy! Using that for calculating prices, base-prices and price-per-durability-point in the Blacksmith config.yml will NOT be used!");
 			this.useHyperAPI = true;
-			this.hyperObAPI = new HyperObjectAPI();
+			Plugin hcPlugin = getServer().getPluginManager().getPlugin("HyperConomy");
+			bukCon = (BukkitConnector)hcPlugin;
+			HyperConomy hc = bukCon.getHC();
+			this.hyperAPI = (HyperAPI) hc.getAPI();
 		}
 
         /* CitiTrader dependency outdated and broken
@@ -169,15 +180,19 @@ public class BlacksmithPlugin extends JavaPlugin {
 	}
 
 	public boolean doesPlayerHaveEnough(Player player) {
-		return economy.getBalance(player.getName()) - getCost(player.getItemInHand()) >= 0;
+		return economy.getBalance(player.getName()) - getCost(player.getItemInHand(), player) >= 0;
 	}
 
 	public String formatCost(Player player) {
-		return economy.format(getCost(player.getItemInHand()));
+		double cost = getCost(player.getItemInHand(), player);
+		if (cost == 0.0) {
+			return "0";
+		}
+		return economy.format(cost);
 	}
 
 	public void withdraw(Player player) {
-		economy.withdrawPlayer(player.getName(), getCost(player.getItemInHand()));
+		economy.withdrawPlayer(player.getName(), getCost(player.getItemInHand(), player));
 	}
        /* CitiTrader dependency outdated and broken.
         public void deposit(NPC npc, Player player) {
@@ -189,7 +204,7 @@ public class BlacksmithPlugin extends JavaPlugin {
         }
         */
 
-	private double getCost(ItemStack item) {
+	private double getCost(ItemStack item, Player player) {
 		DataKey root = config.getConfig().getKey("");
 		double price = Setting.BASE_PRICE.asDouble();
 		if (root.keyExists("base-prices." + item.getType().name().toLowerCase().replace('_', '-')))
@@ -198,11 +213,41 @@ public class BlacksmithPlugin extends JavaPlugin {
 		// Adjust price based on durability and enchantments
 		if (this.useHyperAPI) {
 			// If using hyperconomy, price is calculated like so:
-			// New Item Price (from hyperconomy) / maxDurability = price per durability point
+			// New Item Price + Enchantments Price (from hyperconomy) / maxDurability = price per durability point
 			// Total price would then be base_price + price per durablity point * current durability
-			double hyperPrice = this.hyperObAPI.getTruePurchasePrice(this.hyperObAPI.getHyperObject(item, "default"), this.hyperObAPI.getEnchantmentClass(item),1);
+			double hyperPrice = 0;
+			HItemStack hi = hyperAPI.getHyperPlayer(player.getName()).getItemInHand();
+			HItemStack hi2 = hyperAPI.getHyperPlayer(player.getName()).getItemInHand();
+			
+			for (TradeObject enchant : hyperAPI.getEnchantmentHyperObjects(hi, player.getName())) {
+				hyperPrice = hyperPrice + enchant.getBuyPrice(1);
+				hi2.removeEnchantment(enchant.getEnchantment());
+			}
+			
+			ArrayList<Material> leathers = new ArrayList();
+			leathers.add(Material.LEATHER_BOOTS);
+			leathers.add(Material.LEATHER_CHESTPLATE);
+			leathers.add(Material.LEATHER_HELMET);
+			leathers.add(Material.LEATHER_LEGGINGS);
+			
+			if (leathers.contains(player.getItemInHand().getType())){
+				hi2 = bukCon.getBukkitCommon().getSerializableItemStack(new ItemStack(player.getItemInHand().getType()));
+			}
+			
+			TradeObject to = this.hyperAPI.getHyperObject(hi, "default");
+			if (to==null) {
+				to = hyperAPI.getHyperObject(hi2, "default");
+				if (to==null) {
+					return 0;
+				} else {
+					hyperPrice = hyperPrice+to.getSellPrice(1);
+				}
+			} else {
+				hyperPrice = to.getSellPrice(1);
+			}
 			double hyperPricePerDurability = hyperPrice / item.getType().getMaxDurability();
 			price += (item.getDurability() * hyperPricePerDurability);
+			return price;
 		}
 
 		else {

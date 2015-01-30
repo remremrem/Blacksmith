@@ -6,43 +6,47 @@
 
     <groupId>net.apunch</groupId>
     <artifactId>blacksmith</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.01-SNAPSHOT</version>
     <name>Blacksmith</name>
     <description>Blacksmith Character for the CitizensAPI</description>
 
     <!-- Properties -->
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <bukkit.version>1.5.1-R0.2</bukkit.version>
-        <citizensapi.version>2.0.8-SNAPSHOT</citizensapi.version>
-        <vault.version>1.2.25-SNAPSHOT</vault.version>
+        <bukkit.version>1.8-R0.1-SNAPSHOT</bukkit.version>
+        <citizensapi.version>2.0.14-SNAPSHOT</citizensapi.version>
+        <vault.version>1.5.0-SNAPSHOT</vault.version>
         <build.number>Unknown</build.number>
     </properties>
 
     <!-- Repositories -->
     <repositories>
-        <repository>
-            <id>bukkit-repo</id>
-            <url>http://repo.bukkit.org/content/groups/public/</url>
-        </repository>
-        <repository>
-            <id>citizens-repo</id>
-            <url>http://repo.citizensnpcs.com/</url>
-        </repository>
-        <repository>
-            <id>vault-repo</id>
-            <url>http://ci.herocraftonline.com/plugin/repository/everything/</url>
-        </repository>
+		<repository>
+            <id>spigot-repo</id>
+            <url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
+		</repository>
+		<repository>
+			<id>citizens-repo</id>
+			<url>http://ci.citizensnpcs.co/job/Citizens2/1194/maven-repository/repository/</url>
+		</repository>
+		<repository>
+			<id>vault-repo</id>
+			<url>http://nexus.theyeticave.net/content/repositories/pub_releases</url>
+		</repository>
+		<repository>
+			<id>regalowl-repo</id>
+			<url>http://www.regalowl.net:8080/repository/snapshots/</url>
+		</repository>
     </repositories>
 
     <!-- Dependencies -->
     <dependencies>
-        <dependency>
-            <groupId>org.bukkit</groupId>
-            <artifactId>bukkit</artifactId>
-            <version>${bukkit.version}</version>
-            <scope>provided</scope>
-        </dependency>
+    	<dependency>
+			<groupId>org.bukkit</groupId>
+			<artifactId>bukkit</artifactId>
+			<version>${bukkit.version}</version>
+			<scope>provided</scope>
+		</dependency>
         <dependency>
             <groupId>net.citizensnpcs</groupId>
             <artifactId>citizens</artifactId>
@@ -55,13 +59,12 @@
             <version>${vault.version}</version>
             <scope>provided</scope>
         </dependency>
-        <dependency>
-            <groupId>regalowl.hyperconomy</groupId>
-            <artifactId>HyperConomy</artifactId>
-            <version>0.933</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/HyperConomy.jar</systemPath>
-        </dependency>
+		<dependency>
+			<groupId>regalowl.hyperconomy</groupId>
+			<artifactId>hyperconomy</artifactId>
+			<version>0.975.3-SNAPSHOT</version>
+			<scope>provided</scope>
+		</dependency> 
     </dependencies>
 
     <!-- Build information -->

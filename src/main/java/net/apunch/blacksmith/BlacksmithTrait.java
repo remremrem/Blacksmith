@@ -147,9 +147,17 @@ public class BlacksmithTrait extends Trait {
 				player.sendMessage( invalidItemMsg);
 				return;
 			}
+			
+			String cost = plugin.formatCost(player);
+			if (cost.equals("0")){
+				player.sendMessage( invalidItemMsg);
+				return;
+			}
+			
+				
 			_sessionstart = System.currentTimeMillis();
 			session = new ReforgeSession(player, npc);
-			player.sendMessage(costMsg.replace("<price>", plugin.formatCost(player)).replace("<item>",
+			player.sendMessage(costMsg.replace("<price>", cost).replace("<item>",
 					hand.getType().name().toLowerCase().replace('_', ' ')));
 
 		}
