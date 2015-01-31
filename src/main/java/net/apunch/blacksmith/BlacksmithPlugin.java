@@ -238,10 +238,10 @@ public class BlacksmithPlugin extends JavaPlugin {
 			if (to==null) {
 				to = hyperAPI.getHyperObject(hi2, "default");
 				if (to==null) {
-					return 0;
-				} else {
-					hyperPrice = hyperPrice+to.getSellPrice(1);
+					HItemStack hi3 = bukCon.getBukkitCommon().getSerializableItemStack(new ItemStack(player.getItemInHand().getType()));
+					to = this.hyperAPI.getHyperObject(hi3, "default");
 				}
+				hyperPrice = hyperPrice+to.getSellPrice(1);
 			} else {
 				hyperPrice = to.getSellPrice(1);
 			}
