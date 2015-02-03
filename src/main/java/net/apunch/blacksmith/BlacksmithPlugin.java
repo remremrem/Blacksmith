@@ -15,9 +15,9 @@ import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.PluginCommand;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -180,19 +180,16 @@ public class BlacksmithPlugin extends JavaPlugin {
 	}
 
 	public boolean doesPlayerHaveEnough(Player player) {
-		return economy.getBalance(player.getName()) - getCost(player.getItemInHand(), player) >= 0;
+		return economy.getBalance((OfflinePlayer) player) - getCost(player.getItemInHand(), player) >= 0;
 	}
 
 	public String formatCost(Player player) {
 		double cost = getCost(player.getItemInHand(), player);
-		if (cost == 0.0) {
-			return "0";
-		}
 		return economy.format(cost);
 	}
 
 	public void withdraw(Player player) {
-		economy.withdrawPlayer(player.getName(), getCost(player.getItemInHand(), player));
+		economy.withdrawPlayer(((OfflinePlayer) player), getCost(player.getItemInHand(), player));
 	}
        /* CitiTrader dependency outdated and broken.
         public void deposit(NPC npc, Player player) {
@@ -217,36 +214,48 @@ public class BlacksmithPlugin extends JavaPlugin {
 			// Total price would then be base_price + price per durablity point * current durability
 			double hyperPrice = 0;
 			HItemStack hi = hyperAPI.getHyperPlayer(player.getName()).getItemInHand();
-			HItemStack hi2 = hyperAPI.getHyperPlayer(player.getName()).getItemInHand();
+			ItemStack item2 = player.getItemInHand().clone();
 			
 			for (TradeObject enchant : hyperAPI.getEnchantmentHyperObjects(hi, player.getName())) {
 				hyperPrice = hyperPrice + enchant.getBuyPrice(1);
-				hi2.removeEnchantment(enchant.getEnchantment());
+				item2.removeEnchantment(Enchantment.getByName(enchant.getEnchantment().getEnchantmentName()));
 			}
 			
-			ArrayList<Material> leathers = new ArrayList();
+			ArrayList<Material> leathers = new ArrayList<Material>();
 			leathers.add(Material.LEATHER_BOOTS);
 			leathers.add(Material.LEATHER_CHESTPLATE);
 			leathers.add(Material.LEATHER_HELMET);
 			leathers.add(Material.LEATHER_LEGGINGS);
 			
+			HItemStack hi3 = null;
 			if (leathers.contains(player.getItemInHand().getType())){
-				hi2 = bukCon.getBukkitCommon().getSerializableItemStack(new ItemStack(player.getItemInHand().getType()));
+				hi3 = bukCon.getBukkitCommon().getSerializableItemStack(new ItemStack(player.getItemInHand().getType()));
 			}
 			
 			TradeObject to = this.hyperAPI.getHyperObject(hi, "default");
 			if (to==null) {
-				to = hyperAPI.getHyperObject(hi2, "default");
+				to = hyperAPI.getHyperObject(hi3, "default");
 				if (to==null) {
-					HItemStack hi3 = bukCon.getBukkitCommon().getSerializableItemStack(new ItemStack(player.getItemInHand().getType()));
-					to = this.hyperAPI.getHyperObject(hi3, "default");
+					HItemStack hi4 = bukCon.getBukkitCommon().getSerializableItemStack(new ItemStack(player.getItemInHand().getType()));
+					to = this.hyperAPI.getHyperObject(hi4, "default");
 				}
 				hyperPrice = hyperPrice+to.getSellPrice(1);
+	
 			} else {
 				hyperPrice = to.getSellPrice(1);
 			}
 			double hyperPricePerDurability = hyperPrice / item.getType().getMaxDurability();
 			price += (item.getDurability() * hyperPricePerDurability);
+			
+			double enchantmentModifier = Setting.ENCHANTMENT_MODIFIER.asDouble();
+			for (Enchantment enchantment : item2.getEnchantments().keySet()) {
+				if (root.keyExists("enchantment-modifiers." + enchantment.getName().toLowerCase().replace('_', '-')))
+					enchantmentModifier = root.getDouble("enchantment-modifiers."
+							+ enchantment.getName().toLowerCase().replace('_', '-'));
+				price += enchantmentModifier * item2.getEnchantmentLevel(enchantment);
+			}
+			
+			
 			return price;
 		}
 

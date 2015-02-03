@@ -10,6 +10,7 @@ import java.util.Random;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.inventory.ItemStack;
@@ -21,7 +22,7 @@ import net.citizensnpcs.api.trait.Trait;
 import net.citizensnpcs.api.util.DataKey;
 
 public class BlacksmithTrait extends Trait {
-	private static final int[] enchantments = new int[Enchantment.values().length];
+	private static final String[] enchantments = new String[Enchantment.values().length];
 
 	private final BlacksmithPlugin plugin;
 	private final List<Material> reforgeableItems = new ArrayList<Material>();
@@ -52,7 +53,7 @@ public class BlacksmithTrait extends Trait {
 		plugin = (BlacksmithPlugin) Bukkit.getServer().getPluginManager().getPlugin("Blacksmith");
 		int i = 0;
 		for (Enchantment enchantment : Enchantment.values())
-			enchantments[i++] = enchantment.getId();
+			enchantments[i++] = enchantment.getName();
 	}
 
 	@Override
@@ -119,7 +120,7 @@ public class BlacksmithTrait extends Trait {
 
 		if(session!=null){
 			//timeout
-			if ( System.currentTimeMillis() > _sessionstart + 10*1000 || this.npc.getBukkitEntity().getLocation().distance(session.player.getLocation()) > 20 ){
+			if ( System.currentTimeMillis() > _sessionstart + 10*1000 || this.npc.getEntity().getLocation().distance(session.player.getLocation()) > 20 ){
 				session = null;
 			}	
 		}
@@ -149,12 +150,7 @@ public class BlacksmithTrait extends Trait {
 			}
 			
 			String cost = plugin.formatCost(player);
-			if (cost.equals("0")){
-				player.sendMessage( invalidItemMsg);
-				return;
-			}
 			
-				
 			_sessionstart = System.currentTimeMillis();
 			session = new ReforgeSession(player, npc);
 			player.sendMessage(costMsg.replace("<price>", cost).replace("<item>",
@@ -197,10 +193,10 @@ public class BlacksmithTrait extends Trait {
                 
                 plugin.withdraw(player);
 		session.beginReforge();
-		if (npc.getBukkitEntity() instanceof Player)
-			((Player) npc.getBukkitEntity()).setItemInHand(player.getItemInHand());
+		if (npc.getEntity() instanceof Player)
+			((Player) npc.getEntity()).setItemInHand(player.getItemInHand());
         else
-            npc.getBukkitEntity().getEquipment().setItemInHand(player.getItemInHand());
+        	((LivingEntity) npc.getEntity()).getEquipment().setItemInHand(player.getItemInHand());
 		player.setItemInHand(null);
 	}
 
@@ -219,15 +215,15 @@ public class BlacksmithTrait extends Trait {
 		@Override
 		public void run() {
 			player.sendMessage( reforgeItemInHand() ? successMsg : failMsg);
-			if (npc.getBukkitEntity() instanceof Player)
-				((Player) npc.getBukkitEntity()).setItemInHand(null);
+			if (npc.getEntity() instanceof Player)
+				((Player) npc.getEntity()).setItemInHand(null);
             else
-                npc.getBukkitEntity().getEquipment().setItemInHand(null);
+                ((LivingEntity) npc.getEntity()).getEquipment().setItemInHand(null);
 			if (dropItem)
-				player.getWorld().dropItemNaturally(npc.getBukkitEntity().getLocation(), reforge);
+				player.getWorld().dropItemNaturally(npc.getEntity().getLocation(), reforge);
 			else {
 				for (ItemStack stack : player.getInventory().addItem(reforge).values())
-					player.getWorld().dropItemNaturally(npc.getBukkitEntity().getLocation(), stack);
+					player.getWorld().dropItemNaturally(npc.getEntity().getLocation(), stack);
 			}
 			session = null;
 			// Start cooldown
@@ -274,7 +270,7 @@ public class BlacksmithTrait extends Trait {
 			int roll = random.nextInt(100);
 			if (roll < extraEnchantmentChance && reforge.getEnchantments().keySet().size() < maxEnchantments){
 
-				Enchantment enchantment = Enchantment.getById(enchantments[random.nextInt(enchantments.length)]);
+				Enchantment enchantment = Enchantment.getByName(enchantments[random.nextInt(enchantments.length)]);
 				if (enchantment.canEnchantItem(reforge)) reforge.addEnchantment(enchantment, random.nextInt(enchantment.getMaxLevel() - enchantment.getStartLevel()) + enchantment.getStartLevel());
 
 			}
