@@ -27,7 +27,7 @@
 		</repository>
 		<repository>
 			<id>citizens-repo</id>
-			<url>http://ci.citizensnpcs.co/job/Citizens2/1194/maven-repository/repository/</url>
+			<url>http://ci.citizensnpcs.co/job/Citizens2/lastSuccessfulBuild/maven-repository/repository/</url>
 		</repository>
 		<repository>
 			<id>vault-repo</id>
