@@ -6,16 +6,17 @@
 
     <groupId>net.apunch</groupId>
     <artifactId>blacksmith</artifactId>
-    <version>1.01-SNAPSHOT</version>
+    <version>1.12-SNAPSHOT</version>
     <name>Blacksmith</name>
     <description>Blacksmith Character for the CitizensAPI</description>
 
     <!-- Properties -->
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <bukkit.version>1.8-R0.1-SNAPSHOT</bukkit.version>
-        <citizensapi.version>2.0.14-SNAPSHOT</citizensapi.version>
-        <vault.version>1.4.2-SNAPSHOT</vault.version>
+        <bukkit.version>1.10.2-R0.1-SNAPSHOT</bukkit.version>
+        <citizensapi.version>2.0.20-SNAPSHOT</citizensapi.version>
+        <vault.version>1.5.6</vault.version>
+        <hyperconomy.version>0.975.7-SNAPSHOT</hyperconomy.version>
         <build.number>Unknown</build.number>
     </properties>
 
@@ -31,11 +32,11 @@
 		</repository>
 		<repository>
 			<id>vault-repo</id>
-			<url>http://nexus.theyeticave.net/content/repositories/public</url>
+			<url>http://nexus.hc.to/content/repositories/pub_releases</url>
 		</repository>
 		<repository>
-			<id>regalowl-repo</id>
-			<url>http://www.regalowl.net:8080/repository/snapshots/</url>
+			<id>grokswell-repo</id>
+			<url>http://www.grokswell.com:8000/repo/</url>
 		</repository>
     </repositories>
 
@@ -62,7 +63,7 @@
 		<dependency>
 			<groupId>regalowl.hyperconomy</groupId>
 			<artifactId>hyperconomy</artifactId>
-			<version>0.975.3-SNAPSHOT</version>
+			<version>${hyperconomy.version}</version>
 			<scope>provided</scope>
 		</dependency> 
     </dependencies>
